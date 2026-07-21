@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicación cloud para controlar ingresos, gastos y presupuesto mensual.">
+    <title>Finanzas Cloud</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="encabezado">
+        <div class="contenedor encabezado__contenido">
+            <div>
+                <p class="etiqueta">Aplicación web tipo cloud</p>
+                <h1>Finanzas Cloud</h1>
+                <p class="subtitulo">
+                    Controla tus ingresos, gastos y presupuesto mensual.
+                </p>
+            </div>
+
+            <button id="btnLimpiarDatos" class="boton boton--peligro boton--pequeno" type="button">
+                Limpiar datos
+            </button>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <!-- RESUMEN FINANCIERO -->
+        <section class="seccion" aria-labelledby="tituloResumen">
+            <div class="seccion__encabezado">
+                <div>
+                    <p class="etiqueta">Resumen general</p>
+                    <h2 id="tituloResumen">Estado financiero</h2>
+                </div>
+            </div>
+
+            <div class="tarjetas">
+                <article class="tarjeta tarjeta--ingreso">
+                    <span>Total de ingresos</span>
+                    <strong id="totalIngresos">$0,00</strong>
+                </article>
+
+                <article class="tarjeta tarjeta--gasto">
+                    <span>Total de gastos</span>
+                    <strong id="totalGastos">$0,00</strong>
+                </article>
+
+                <article class="tarjeta tarjeta--saldo">
+                    <span>Saldo disponible</span>
+                    <strong id="saldoDisponible">$0,00</strong>
+                </article>
+
+                <article class="tarjeta tarjeta--presupuesto">
+                    <span>Presupuesto restante</span>
+                    <strong id="presupuestoRestante">$0,00</strong>
+                </article>
+            </div>
+        </section>
+
+        <!-- PRESUPUESTO -->
+        <section class="seccion panel" aria-labelledby="tituloPresupuesto">
+            <div class="seccion__encabezado">
+                <div>
+                    <p class="etiqueta">Planificación</p>
+                    <h2 id="tituloPresupuesto">Presupuesto mensual</h2>
+                </div>
+            </div>
+
+            <form id="formPresupuesto" class="formulario formulario--presupuesto">
+                <div class="campo">
+                    <label for="presupuestoMensual">Valor del presupuesto</label>
+                    <input
+                        type="number"
+                        id="presupuestoMensual"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ejemplo: 500"
+                        required
+                    >
+                </div>
+
+                <button class="boton" type="submit">
+                    Guardar presupuesto
+                </button>
+            </form>
+
+            <div class="progreso">
+                <div class="progreso__informacion">
+                    <span id="textoPresupuesto">No se ha definido un presupuesto.</span>
+                    <strong id="porcentajePresupuesto">0%</strong>
+                </div>
+
+                <div class="progreso__barra" aria-label="Porcentaje del presupuesto utilizado">
+                    <div id="barraPresupuesto" class="progreso__valor"></div>
+                </div>
+            </div>
+
+            <p id="alertaPresupuesto" class="alerta alerta--oculta" role="status"></p>
+        </section>
+
+        <!-- FORMULARIO DE MOVIMIENTOS -->
+        <section class="seccion panel" aria-labelledby="tituloFormulario">
+            <div class="seccion__encabezado">
+                <div>
+                    <p class="etiqueta">Nuevo registro</p>
+                    <h2 id="tituloFormulario">Registrar movimiento</h2>
+                </div>
+
+                <span id="modoFormulario" class="estado-formulario">Modo: nuevo</span>
+            </div>
+
+            <form id="formMovimiento" class="formulario">
+                <input type="hidden" id="movimientoId">
+
+                <div class="campo">
+                    <label for="tipo">Tipo</label>
+                    <select id="tipo" required>
+                        <option value="ingreso">Ingreso</option>
+                        <option value="gasto">Gasto</option>
+                    </select>
+                </div>
+
+                <div class="campo campo--doble">
+                    <label for="descripcion">Descripción</label>
+                    <input
+                        type="text"
+                        id="descripcion"
+                        maxlength="80"
+                        placeholder="Ejemplo: Pago de salario"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="monto">Monto</label>
+                    <input
+                        type="number"
+                        id="monto"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="0.00"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" required>
+                </div>
+
+                <div class="acciones-formulario campo--completo">
+                    <button id="btnGuardar" class="boton" type="submit">
+                        Guardar movimiento
+                    </button>
+
+                    <button id="btnCancelarEdicion" class="boton boton--secundario oculto" type="button">
+                        Cancelar edición
+                    </button>
+                </div>
+            </form>
+
+            <p id="mensajeFormulario" class="mensaje" role="status"></p>
+        </section>
+
+        <!-- FILTROS -->
+        <section class="seccion panel" aria-labelledby="tituloMovimientos">
+            <div class="seccion__encabezado">
+                <div>
+                    <p class="etiqueta">Historial</p>
+                    <h2 id="tituloMovimientos">Movimientos registrados</h2>
+                </div>
+
+                <button id="btnExportar" class="boton boton--exito" type="button">
+                    Exportar CSV
+                </button>
+            </div>
+
+            <div class="filtros">
+                <div class="campo campo--doble">
+                    <label for="buscar">Buscar</label>
+                    <input
+                        type="search"
+                        id="buscar"
+                        placeholder="Buscar por descripción..."
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="filtroTipo">Filtrar por tipo</label>
+                    <select id="filtroTipo">
+                        <option value="todos">Todos</option>
+                        <option value="ingreso">Ingresos</option>
+                        <option value="gasto">Gastos</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="filtroCategoria">Filtrar por categoría</label>
+                    <select id="filtroCategoria">
+                        <option value="todas">Todas las categorías</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="orden">Ordenar</label>
+                    <select id="orden">
+                        <option value="fecha-desc">Más recientes</option>
+                        <option value="fecha-asc">Más antiguos</option>
+                        <option value="monto-desc">Mayor monto</option>
+                        <option value="monto-asc">Menor monto</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Descripción</th>
+                            <th>Categoría</th>
+                            <th>Tipo</th>
+                            <th>Monto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tablaMovimientos"></tbody>
+                </table>
+            </div>
+
+            <div id="sinResultados" class="sin-resultados oculto">
+                No existen movimientos que coincidan con los filtros.
+            </div>
+
+            <div class="pie-tabla">
+                <span id="contadorRegistros">0 movimientos</span>
+            </div>
+        </section>
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <p>
+                Proyecto académico desarrollado con HTML, CSS y JavaScript.
+                Publicado mediante GitHub y Vercel.
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
