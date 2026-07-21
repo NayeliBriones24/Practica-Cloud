@@ -1,8 +1,9 @@
-// ================================================
-// FINANZAS CLOUD
-// Lógica principal de la aplicación
-// ================================================
-
+/*
+Fecha: 20/07/2026
+Integrantes:
+- Briones Pico Angela Nayeli
+-Velez Lopera Domenica Liceth
+*/
 // Categorías disponibles según el tipo de movimiento.
 const categorias = {
     ingreso: [
